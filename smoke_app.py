@@ -1,16 +1,32 @@
-import tensorflow as tf
-from django.shortcuts import redirect
-from django.template import loader
-from django.http import HttpResponse
+from flask import Flask, request, Response, jsonify
+from flask_json import FlaskJSON
 from openpyxl import load_workbook
+import tensorflow as tf
 
-def index(request):
-    response = HttpResponse()
-    response.write("<b>OI MEU CHAPA!!!</b>")
-    return response
+app = Flask(__name__)
+FlaskJSON(app)
 
-def tensor(request):
-    response = HttpResponse()
+@app.route('/', methods=['GET'])
+def index():
+    return 'Hello, Smoking!'
+
+@app.route('/smoke/network/train', methods=['POST'])
+def train():
+    rangeTrain = 100000    
+    typeTrain = ''
+    
+    if 'range' in request.args:
+        rangeTrain = int(request.args['range'])
+
+    print('Range: '+ str(rangeTrain))
+
+    if 'typeTrain' in request.args:
+        typeTrain = request.args['typeTrain']
+    else:
+        resp = jsonify('Informe o tipo do treinamento')
+        resp.status_code = 400
+        return resp    
+
     # massas
     # TREINAMENTO- RESPOSTA A CARGA
     # TREINAMENTO APOIO TERMINAL
@@ -18,8 +34,8 @@ def tensor(request):
     # COMPARAO - XLS
 
     # read input data
-    wb = load_workbook(filename='smoke/dados.xlsx', read_only=True)
-    ws = wb['TREINAMENTO APOIO MEDIO']
+    wb = load_workbook(filename='dados.xlsx', read_only=True)
+    ws = wb[typeTrain]
 
 
     # read xlxs
@@ -41,8 +57,8 @@ def tensor(request):
         output.append([])
         output[i].append(data[0][i])
 
-    print('output', output)
-    print('\n')
+    # ###print('output', output)
+    # ###print('\n')
 
     # input
     input = []
@@ -60,7 +76,7 @@ def tensor(request):
     x = tf.placeholder(tf.float32, [None, len(input[0])], name='X')
     y = tf.placeholder(tf.float32, [None, 1])
 
-    print('X: ', x)
+    # ###print('X: ', x)
     #print('W: ', W)
 
     a = tf.sigmoid(tf.matmul(x, W), name='O')
@@ -78,13 +94,17 @@ def tensor(request):
 
     saver = tf.train.Saver()
 
-    for epoch in range(100000):
+    for epoch in range(rangeTrain):
         result = sess.run([train_step, loss, W], {x: x_train, y: y_train})
 
     #print('Final result:\nloss = ', result[1], '\nW = ', result[2])
-    print(sess.run(a, {x:x_train, y:y_train}))
+    
+    # ###print(sess.run(a, {x:x_train, y:y_train}))
+    
 
     # tf.train.write_graph(sess.graph_def, '.', 'smovetf.pbtxt') 
     # saver.save(sess, 'smovetf.ckpt')
-    response.write(sess.run(a, {x:x_train, y:y_train}))
-    return response
+
+    resp = jsonify((sess.run(a, {x:x_train, y:y_train}).tolist()))
+    resp.status_code = 200
+    return resp

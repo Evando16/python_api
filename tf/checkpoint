@@ -1,2 +1,0 @@
-model_checkpoint_path: "smovetf.ckpt"
-all_model_checkpoint_paths: "smovetf.ckpt"
