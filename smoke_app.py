@@ -23,9 +23,7 @@ def train():
     if 'typeTrain' in request.args:
         typeTrain = request.args['typeTrain']
     else:
-        resp = jsonify('Informe o tipo do treinamento')
-        resp.status_code = 400
-        return resp    
+        return json.dumps('Informe o tipo do treinamento')  
 
     # massas
     # TREINAMENTO- RESPOSTA A CARGA
@@ -99,12 +97,9 @@ def train():
 
     #print('Final result:\nloss = ', result[1], '\nW = ', result[2])
     
-    # ###print(sess.run(a, {x:x_train, y:y_train}))
-    
+    print(sess.run(a, {x:x_train, y:y_train}))    
 
     # tf.train.write_graph(sess.graph_def, '.', 'smovetf.pbtxt') 
     # saver.save(sess, 'smovetf.ckpt')
 
-    resp = jsonify((sess.run(a, {x:x_train, y:y_train}).tolist()))
-    resp.status_code = 200
-    return resp
+    return json.dumps(sess.run(a, {x:x_train, y:y_train}).tolist())
