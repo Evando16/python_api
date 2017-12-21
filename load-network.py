@@ -123,19 +123,24 @@ def train():
     # create feed-dict to feed new data
 
     graph = tf.get_default_graph()
-    w1 = graph.get_tensor_by_name("W:0")
-    w2 = graph.get_tensor_by_name("X:0")
+    #w1 = graph.get_tensor_by_name("W:0")
+    #w2 = graph.get_tensor_by_name("X:0")
+	
+    print(graph.get_tensor_by_name("X:0"))
+
+    x1 = graph.get_tensor_by_name("X:0")
+    w2 = graph.get_tensor_by_name("W:0")
     
     array = {'W': 15.291812}
     array2 = [1]
     dictonary = {}
-    feed_dict = {w1:13.0, w2:17.0}
+    #feed_dict = {w1:13.0, w2:17.0}
 
     #Now, access the op that you want to run. 
     op_to_restore = graph.get_tensor_by_name("O:0")
 
-    print(sess.run(op_to_restore, array)) 
-
+    #print(sess.run(op_to_restore, {x1:x_train, w2:y_train}))
+    
     # print(sess.run([train_step, loss, W], {x: x_train, y: y_train}))
     # print sess.run(op_to_restore,feed_dict)
     #This will print 60 which is calculated 
@@ -143,5 +148,5 @@ def train():
 
     # resp = jsonify((sess.run(a, {x:x_train, y:y_train}).tolist()))
     # resp.status_code = 200
-    # return json.dumps(sess.run(a, {x:x_train, y:y_train}).tolist())
-    return 'ok'
+    return json.dumps(sess.run(op_to_restore, {x1:y_train, x1:x_train}).tolist())
+    #return 'ok'
