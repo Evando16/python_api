@@ -15,7 +15,7 @@ import tensorflow as tf
 
 # @app.route('/smoke/network/train', methods=['POST'])
 # def train():
-rangeTrain = 10    
+rangeTrain = 100000    
 typeTrain = 'TREINAMENTO APOIO MEDIO'
 
 # if 'range' in request.args:
@@ -63,9 +63,8 @@ for i in range(0, len(data[0])):
 
 # input
 input = []
-
 for i in range(1, len(data)):
-    for j in range(0, 1):
+    for j in range(0, len(data[i])):
         if i == 1:
             input.append([])
             input[j].append(1)
@@ -95,11 +94,12 @@ y_train = output #[[0], [0], [1]]
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
-saver = tf.train.Saver()
+
 
 for epoch in range(rangeTrain):
     result = sess.run([train_step, loss, W], {x: x_train, y: y_train})
 
+saver = tf.train.Saver()
 saver.export_meta_graph('my_model')
 
 #print('Final result:\nloss = ', result[1], '\nW = ', result[2])
