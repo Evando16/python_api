@@ -94,13 +94,13 @@ y_train = output #[[0], [0], [1]]
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
-
-
-for epoch in range(rangeTrain):
+for epoch in range(100000):
     result = sess.run([train_step, loss, W], {x: x_train, y: y_train})
 
 saver = tf.train.Saver()
-saver.export_meta_graph('my_model')
+
+# saver.export_meta_graph('my_model')
+saver.save(sess, './smoke', global_step=1000)
 
 #print('Final result:\nloss = ', result[1], '\nW = ', result[2])
 

@@ -49,7 +49,7 @@ for row in ws.rows:
 
 # output
 output = []
-for i in range(0, 21):
+for i in range(0, len(data[0])):
     output.append([])
     output[i].append(data[0][i])
 
@@ -64,37 +64,38 @@ for i in range(1, len(data)):
         input[j].append(data[i][j])
 
 # Aqui se e feito input[0] ocorre erro ao fazer session run
-x_train = input
-y_train = output #[[0], [0], [1]]
 
+teste = []
+
+teste.append(input[44])
+x_train = teste
+y_train = output #[[0], [0], [1]]
 
 sess=tf.Session()    
 
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('my_model')
+saver = tf.train.import_meta_graph('./smoke-1000.meta')
 saver.restore(sess,tf.train.latest_checkpoint('./'))
 
 # Access saved Variables directly
-# print(sess.run('bias:0'))
 # This will print 2, which is the value of bias that we saved
-
 
 # Now, let's access and create placeholders variables and
 # create feed-dict to feed new data
 
 graph = tf.get_default_graph()
-# w = graph.get_tensor_by_name("W:0")
+w = graph.get_tensor_by_name("W:0")
 x = graph.get_tensor_by_name("X:0")
 y = graph.get_tensor_by_name("Y:0")
 
 #feed_dict = {w1:13.0, w2:17.0}
 
 #Now, access the op that you want to run. 
-# op_to_restore = graph.get_tensor_by_name("smoke:0")
+op_to_restore = graph.get_tensor_by_name("smoke:0")
 
-W = sess.run('W:0')
-op_to_restore = tf.sigmoid(tf.matmul(x, W), name='smoke')
-print(sess.run(op_to_restore, {x:x_train, y:y_train}))
+# print(sess.run('W:0'))
+# op_to_restore = tf.sigmoid(tf.matmul(x, W), name='smoke')
+print(sess.run(op_to_restore, {x:x_train}))
 #This will print 60 which is calculated 
 
 #---

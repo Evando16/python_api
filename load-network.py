@@ -16,10 +16,10 @@ def train():
     rangeTrain = 100000
     typeTrain = ''
     
-    if 'range' in request.args:
-        rangeTrain = int(request.args['range'])
+    # if 'range' in request.args:
+    #     rangeTrain = int(request.args['range'])
 
-    print('Range: '+ str(rangeTrain))
+    # print('Range: '+ str(rangeTrain))
 
     if 'typeTrain' in request.args:
         typeTrain = request.args['typeTrain']
@@ -87,8 +87,10 @@ def train():
     # loss = tf.reduce_mean(- (y * tf.log(a) + (1 - y) * tf.log(1 - a)))
     # train_step = tf.train.GradientDescentOptimizer(1e-5).minimize(loss)
 
-    x_train = input #[[1, 34.62, 78.02], [1, 33, 79], [1, 60.18, 86.30]]
+    x_train = input[0] #[[1, 34.62, 78.02], [1, 33, 79], [1, 60.18, 86.30]]
     y_train = output #[[0], [0], [1]]
+
+    print(input)
 
     # sess = tf.InteractiveSession()
     # tf.global_variables_initializer().run()
@@ -148,5 +150,5 @@ def train():
 
     # resp = jsonify((sess.run(a, {x:x_train, y:y_train}).tolist()))
     # resp.status_code = 200
-    return json.dumps(sess.run(op_to_restore, {x1:y_train, x1:x_train}).tolist())
-    #return 'ok'
+    #return json.dumps(sess.run(op_to_restore, {x1:y_train, x1:x_train}).tolist())
+    return 'ok'
