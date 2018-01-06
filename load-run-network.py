@@ -32,7 +32,7 @@ typeTrain = 'TREINAMENTO APOIO MEDIO'
 # COMPARAO - XLS
 
 # read input data
-wb = load_workbook(filename='dados.xlsx', read_only=True)
+wb = load_workbook(filename='./dados.xlsx', read_only=True)
 ws = wb[typeTrain]
 
 
@@ -74,7 +74,7 @@ y_train = output #[[0], [0], [1]]
 sess=tf.Session()    
 
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('./smoke-1000.meta')
+saver = tf.train.import_meta_graph('./load-save-network/smoke-1000.meta')
 saver.restore(sess,tf.train.latest_checkpoint('./'))
 
 # Access saved Variables directly

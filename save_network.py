@@ -1,32 +1,10 @@
-# from flask import Flask, request, Response, jsonify
-# from flask_json import FlaskJSON
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from openpyxl import load_workbook
 import tensorflow as tf
-# import json
 
-# app = Flask(__name__)
-# FlaskJSON(app)
-
-# @app.route('/', methods=['GET'])
-# def index():
-#     return 'Hello, Smoking!'
-
-# @app.route('/smoke/network/train', methods=['POST'])
-# def train():
-rangeTrain = 100000    
+rangeTrain = 100000
 typeTrain = 'TREINAMENTO APOIO MEDIO'
-
-# if 'range' in request.args:
-#     rangeTrain = int(request.args['range'])
-
-# print('Range: '+ str(rangeTrain))
-
-# if 'typeTrain' in request.args:
-#     typeTrain = request.args['typeTrain']
-# else:
-#     return json.dumps('Informe o tipo do treinamento')  
 
 # massas
 # TREINAMENTO- RESPOSTA A CARGA
@@ -94,13 +72,13 @@ y_train = output #[[0], [0], [1]]
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
-for epoch in range(100000):
+for epoch in range(rangeTrain):
     result = sess.run([train_step, loss, W], {x: x_train, y: y_train})
 
 saver = tf.train.Saver()
 
 # saver.export_meta_graph('my_model')
-saver.save(sess, './smoke', global_step=1000)
+saver.save(sess, './network/smoke', global_step=1000)
 
 #print('Final result:\nloss = ', result[1], '\nW = ', result[2])
 
