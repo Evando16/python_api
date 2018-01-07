@@ -74,8 +74,8 @@ y_train = output #[[0], [0], [1]]
 sess=tf.Session()    
 
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('./load-save-network/smoke-1000.meta')
-saver.restore(sess,tf.train.latest_checkpoint('./'))
+saver = tf.train.import_meta_graph('./network/smoke-1000.meta')
+saver.restore(sess,tf.train.latest_checkpoint('./network/'))
 
 # Access saved Variables directly
 # This will print 2, which is the value of bias that we saved

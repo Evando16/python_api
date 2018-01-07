@@ -45,8 +45,7 @@ for i in range(1, len(data)):
     for j in range(0, len(data[i])):
         if i == 1:
             input.append([])
-            input[j].append(1)
-
+            # input[j].append(1)
         input[j].append(data[i][j])
 
 #print('input', input)
