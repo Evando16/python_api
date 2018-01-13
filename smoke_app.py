@@ -53,12 +53,12 @@ def run():
         x_train = []
         x_train.append(collectJSON[slice(startGetCollect, endGetCollect)])
 
-        results.append(sess.run(op_to_restore, {x: x_train})[0])
+        results.append(sess.run(op_to_restore, {x: x_train})[0][0])
         count += 1
         startGetCollect += 1
         endGetCollect += 1
 
-    print(np.asarray(results))
+    print(np.asarray(results).tolist())
     return json.dumps(np.asarray(results).tolist()), 200
 
 port=os.getenv('PORT', '5000')
