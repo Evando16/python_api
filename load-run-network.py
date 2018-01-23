@@ -35,7 +35,6 @@ typeTrain = 'TREINAMENTO APOIO MEDIO'
 wb = load_workbook(filename='./dados.xlsx', read_only=True)
 ws = wb[typeTrain]
 
-
 # read xlxs
 data = []
 index = 0
@@ -59,7 +58,7 @@ for i in range(1, len(data)):
     for j in range(0, len(data[i])):
         if i == 1:
             input.append([])
-            input[j].append(1)
+            #input[j].append(1)
 
         input[j].append(data[i][j])
 
@@ -84,7 +83,7 @@ saver.restore(sess,tf.train.latest_checkpoint('./network/'))
 # create feed-dict to feed new data
 
 graph = tf.get_default_graph()
-w = graph.get_tensor_by_name("W:0")
+w = graph.get_tensor_by_name("w:0")
 x = graph.get_tensor_by_name("X:0")
 y = graph.get_tensor_by_name("Y:0")
 

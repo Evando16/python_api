@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from openpyxl import load_workbook
 import tensorflow as tf
 
-rangeTrain = 100000
+rangeTrain = 2000000
 typeTrain = 'TREINAMENTO APOIO MEDIO'
 
 # massas
@@ -50,19 +50,23 @@ for i in range(1, len(data)):
 
 #print('input', input)
 
-W = tf.Variable(tf.zeros([len(input[0]), 1]), tf.float32, name='W')
+w = tf.Variable(tf.zeros([len(input[0]), 1]), tf.float32, name='w')
 x = tf.placeholder(tf.float32, [None, len(input[0])], name='X')
+
 y = tf.placeholder(tf.float32, [None, 1], name='Y')
+b = tf.Variable(tf.zeros([1]))
 
 # ###print('X: ', x)
-#print('W: ', W)
+#print('w: ', w)
 
-a = tf.sigmoid(tf.matmul(x, W), name='smoke')
+pred = tf.sigmoid(tf.matmul(x, w) + b, name='smoke')
+#pred = tf.nn.softmax(tf.matmul(x, w) + b)
 
 #print(a)
 
-loss = tf.reduce_mean(- (y * tf.log(a) + (1 - y) * tf.log(1 - a)))
-train_step = tf.train.GradientDescentOptimizer(1e-5).minimize(loss)
+loss = tf.reduce_mean(- (y * tf.log(pred) + (1 - y) * tf.log(1 - pred)))
+#loss = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
+train_step = tf.train.GradientDescentOptimizer(1e-4).minimize(loss)
 
 x_train = input #[1, 34.62, 78.02]
 y_train = output #[[0], [0], [1]]
@@ -71,19 +75,16 @@ y_train = output #[[0], [0], [1]]
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
-for epoch in range(rangeTrain):
-    result = sess.run([train_step, loss, W], {x: x_train, y: y_train})
+for epoch in range(rangeTrain): 
+    result = sess.run([train_step, loss, w], {x: x_train, y: y_train})  
+
+    if epoch % 10000 == 0:
+        print (float(epoch) / rangeTrain) * 100
 
 saver = tf.train.Saver()
 
-# saver.export_meta_graph('my_model')
 saver.save(sess, './network/smoke', global_step=1000)
 
-#print('Final result:\nloss = ', result[1], '\nW = ', result[2])
+#print('Final result:\nloss = ', result[1], '\nw = ', result[2])
 
-print(sess.run(a, {x:x_train, y:y_train}))    
-
-# tf.train.write_graph(sess.graph_def, '.', 'smovetf.pbtxt') 
-# saver.save(sess, 'smovetf.ckpt')
-
-# return json.dumps(sess.run(a, {x:x_train, y:y_train}).tolist())
+print(sess.run(pred, {x:x_train, y:y_train}))    
