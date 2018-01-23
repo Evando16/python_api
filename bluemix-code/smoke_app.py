@@ -42,7 +42,7 @@ def run():
     x = graph.get_tensor_by_name("X:0")
     y = graph.get_tensor_by_name("Y:0")
 
-    op_to_restore = graph.get_tensor_by_name("smoke:0")
+    pred = graph.get_tensor_by_name("smoke:0")
 
     results = []
     count = 0
@@ -53,7 +53,7 @@ def run():
         x_train = []
         x_train.append(collectJSON[slice(startGetCollect, endGetCollect)])
 
-        results.append(sess.run(op_to_restore, {x: x_train})[0][0])
+        results.append(sess.run(pred, {x: x_train})[0][0])
         count += 1
         startGetCollect += 1
         endGetCollect += 1
