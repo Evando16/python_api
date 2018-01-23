@@ -16,7 +16,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 # @app.route('/smoke/network/train', methods=['POST'])
 # def train():
 #     rangeTrain = 100000
-typeTrain = 'TREINAMENTO APOIO MEDIO'
+typeTrain = 'COMPARACAO - XLS'
 
 # if 'typeTrain' in request.args:
 #     typeTrain = request.args['typeTrain']
@@ -46,29 +46,10 @@ for row in ws.rows:
     
     index += 1
 
-# output
-output = []
-for i in range(0, len(data[0])):
-    output.append([])
-    output[i].append(data[0][i])
-
 # input
 input = []
 for i in range(1, len(data)):
-    for j in range(0, len(data[i])):
-        if i == 1:
-            input.append([])
-            #input[j].append(1)
-
-        input[j].append(data[i][j])
-
-# Aqui se e feito input[0] ocorre erro ao fazer session run
-
-teste = []
-
-teste.append(input[44])
-x_train = teste
-y_train = output #[[0], [0], [1]]
+    input.append(data[i][1])
 
 sess=tf.Session()    
 
@@ -94,11 +75,20 @@ op_to_restore = graph.get_tensor_by_name("smoke:0")
 
 # print(sess.run('W:0'))
 # op_to_restore = tf.sigmoid(tf.matmul(x, W), name='smoke')
-print(sess.run(op_to_restore, {x:x_train}))
-#This will print 60 which is calculated 
+# print(sess.run(op_to_restore, {x:x_train}))
 
-#---
-# resp = jsonify((sess.run(a, {x:x_train, y:y_train}).tolist()))
-# resp.status_code = 200
-# return json.dumps(sess.run(op_to_restore, {x1:y_train, x1:x_train}).tolist())
-#return 'ok'
+results = []
+count = 0
+startGetCollect = 0
+endGetCollect = 20
+
+while(endGetCollect <= len(input)):
+    x_train = []
+    x_train.append(input[slice(startGetCollect, endGetCollect)])
+
+    results.append(sess.run(op_to_restore, {x: x_train})[0][0])
+    count += 1
+    startGetCollect += 1
+    endGetCollect += 1
+
+print(results)
