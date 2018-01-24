@@ -8,13 +8,18 @@ TERMINAL_PATH = './network/terminal/terminal'
 MEDIO_PATH = './network/medio/medio'
 
 rangeTrain = 2000000
-typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
+learningRate = 1
+minError = 0.0085
+typeTrain = 'TREINAMENTO APOIO TERMINAL'
 
 # massas
 # TREINAMENTO- RESPOSTA A CARGA
 # TREINAMENTO APOIO TERMINAL
 # TREINAMENTO APOIO MEDIO
 # COMPARAO - XLS
+
+def isNaN(num):
+    return num != num
 
 # read input data
 wb = load_workbook(filename='dados.xlsx', read_only=True)
@@ -81,6 +86,18 @@ tf.global_variables_initializer().run()
 
 for epoch in range(rangeTrain): 
     result = sess.run([train_step, loss, w], {x: x_train, y: y_train})  
+
+    error = result[1]
+
+    print(error)
+
+    if(isNaN(error)):
+        print('return NaN')
+        break
+
+    if(error < minError):
+        print('finish OK')
+        break
 
     if epoch % 10000 == 0:
         print (float(epoch) / rangeTrain) * 100
