@@ -3,8 +3,12 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from openpyxl import load_workbook
 import tensorflow as tf
 
+CARGA_PATH = './network/carga/carga'
+TERMINAL_PATH = './network/terminal/terminal'
+MEDIO_PATH = './network/medio/medio'
+
 rangeTrain = 2000000
-typeTrain = 'TREINAMENTO APOIO MEDIO'
+typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
 
 # massas
 # TREINAMENTO- RESPOSTA A CARGA
@@ -83,7 +87,16 @@ for epoch in range(rangeTrain):
 
 saver = tf.train.Saver()
 
-saver.save(sess, './network/smoke', global_step=1000)
+if typeTrain == 'TREINAMENTO- RESPOSTA A CARGA':
+    saver.save(sess, CARGA_PATH, global_step=1000)
+    print('carga')
+elif typeTrain == 'TREINAMENTO APOIO TERMINAL':
+    saver.save(sess, TERMINAL_PATH, global_step=1000)
+    print('terminal')
+elif typeTrain == 'TREINAMENTO APOIO MEDIO':
+    saver.save(sess, MEDIO_PATH, global_step=1000)    
+    print('medio')
+        
 
 #print('Final result:\nloss = ', result[1], '\nw = ', result[2])
 

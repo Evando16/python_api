@@ -1,0 +1,2 @@
+model_checkpoint_path: "terminal-1000"
+all_model_checkpoint_paths: "terminal-1000"
