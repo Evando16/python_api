@@ -45,15 +45,10 @@ def smoke():
         return "Insufficient collection quantity", 400
 
     if typeTrain.lower() == 'carga':
-        print('carga----')
         result = run(collectJSON, CARGA_PATH_NETWORK, CARGA_PATH_CHECKPOINT)
     elif typeTrain.lower() == 'terminal':
-        print('terminal----')
         result = run(collectJSON, TERMINAL_PATH_NETWORK, TERMINAL_PATH_CHECKPOINT)
     elif typeTrain.lower() == 'medio':
-        print('medio----')
-        print(MEDIO_PATH_NETWORK)
-        print(MEDIO_PATH_CHECKPOINT)        
         result = run(collectJSON, MEDIO_PATH_NETWORK, MEDIO_PATH_CHECKPOINT)
     else:
         return "Type of training does not exist", 400
