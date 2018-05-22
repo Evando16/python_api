@@ -1,39 +1,25 @@
-# from flask import Flask, request, Response, jsonify
-# from flask_json import FlaskJSON
 from openpyxl import load_workbook
 import tensorflow as tf
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-# import json
+import matplotlib.pyplot as plt
+from SmoveHelper import TrainRule
+from SmoveHelper import Constants
 
-# app = Flask(__name__)
-# FlaskJSON(app)
+TrainRule.function()
 
-# @app.route('/', methods=['GET'])
-# def index():
-#     return 'Hello, Smoking!'
+typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
+path = ''
 
-# @app.route('/smoke/network/train', methods=['POST'])
-# def train():
-#     rangeTrain = 100000
-typeTrain = 'COMPARACAO - XLS'
-
-# if 'typeTrain' in request.args:
-#     typeTrain = request.args['typeTrain']
-# else:
-#     resp = jsonify('Informe o tipo do treinamento')
-#     resp.status_code = 400
-#     return resp    
-
-# massas
-# TREINAMENTO- RESPOSTA A CARGA
-# TREINAMENTO APOIO TERMINAL
-# TREINAMENTO APOIO MEDIO
-# COMPARAO - XLS
+if typeTrain == 'TREINAMENTO- RESPOSTA A CARGA':
+    path = CARGA_PATH
+elif typeTrain == 'TREINAMENTO APOIO TERMINAL':
+    path = TERMINAL_PATH
+elif typeTrain == 'TREINAMENTO APOIO MEDIO':
+    path = MEDIO_PATH
 
 # read input data
 wb = load_workbook(filename='./dados.xlsx', read_only=True)
-ws = wb[typeTrain]
+ws = wb['COMPARACAO - XLS']
 
 # read xlxs
 data = []
@@ -86,9 +72,14 @@ while(endGetCollect <= len(input)):
     x_train = []
     x_train.append(input[slice(startGetCollect, endGetCollect)])
 
-    results.append(sess.run(op_to_restore, {x: x_train})[0][0])
+    results.append(sess.run(op_to_restore, {x: x_train})[0][0] * 100)
     count += 1
     startGetCollect += 1
     endGetCollect += 1
 
-print(results)
+#print(results)
+
+plt.plot(input, 'r')
+plt.plot(results, 'g')
+plt.ylabel(typeTrain)
+plt.show()

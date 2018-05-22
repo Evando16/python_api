@@ -1,22 +1,23 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from openpyxl import load_workbook
+import matplotlib.pyplot as plt
 import tensorflow as tf
-
-CARGA_PATH = './network/carga/carga'
-TERMINAL_PATH = './network/terminal/terminal'
-MEDIO_PATH = './network/medio/medio'
-
-rangeTrain = 2000000
-learningRate = 1
-minError = 0.0085
-typeTrain = 'TREINAMENTO APOIO TERMINAL'
 
 # massas
 # TREINAMENTO- RESPOSTA A CARGA
 # TREINAMENTO APOIO TERMINAL
 # TREINAMENTO APOIO MEDIO
 # COMPARAO - XLS
+
+CARGA_PATH = './network/carga/carga'
+TERMINAL_PATH = './network/terminal/terminal'
+MEDIO_PATH = './network/medio/medio'
+
+rangeTrain = 2000000
+learningRate = 1e-4
+minError = 0.0085
+typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
 
 def isNaN(num):
     return num != num
@@ -75,11 +76,15 @@ pred = tf.sigmoid(tf.matmul(x, w) + b, name='smoke')
 
 loss = tf.reduce_mean(- (y * tf.log(pred) + (1 - y) * tf.log(1 - pred)))
 #loss = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
-train_step = tf.train.GradientDescentOptimizer(1e-4).minimize(loss)
+train_step = tf.train.GradientDescentOptimizer(learningRate).minimize(loss)
 
 x_train = input #[1, 34.62, 78.02]
 y_train = output #[[0], [0], [1]]
 # print(input[0])
+
+#plt.plot(input[0], input[5])
+#plt.ylabel(typeTrain)
+#plt.show()
 
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
@@ -89,8 +94,6 @@ for epoch in range(rangeTrain):
 
     error = result[1]
 
-    print(error)
-
     if(isNaN(error)):
         print('return NaN')
         break
@@ -99,8 +102,9 @@ for epoch in range(rangeTrain):
         print('finish OK')
         break
 
-    if epoch % 10000 == 0:
-        print (float(epoch) / rangeTrain) * 100
+    if epoch % 1000 == 0:
+        print("%0.2f" % (minError/error))
+        #print (float(epoch) / rangeTrain) * 100
 
 saver = tf.train.Saver()
 
