@@ -3,19 +3,10 @@ import tensorflow as tf
 import os
 import matplotlib.pyplot as plt
 from SmoveHelper import TrainRule
-from SmoveHelper import Constants
+from SmoveHelper import Rules
 
-TrainRule.function()
-
-typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
-path = ''
-
-if typeTrain == 'TREINAMENTO- RESPOSTA A CARGA':
-    path = CARGA_PATH
-elif typeTrain == 'TREINAMENTO APOIO TERMINAL':
-    path = TERMINAL_PATH
-elif typeTrain == 'TREINAMENTO APOIO MEDIO':
-    path = MEDIO_PATH
+# Rede
+rule = Rules.loadRespostaCarga()
 
 # read input data
 wb = load_workbook(filename='./dados.xlsx', read_only=True)
@@ -40,8 +31,8 @@ for i in range(1, len(data)):
 sess=tf.Session()    
 
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('./network/terminal/terminal-1000.meta')
-saver.restore(sess,tf.train.latest_checkpoint('./network/terminal'))
+saver = tf.train.import_meta_graph(rule.completePath + '-1000.meta')
+saver.restore(sess,tf.train.latest_checkpoint(rule.basePath))
 
 # Access saved Variables directly
 # This will print 2, which is the value of bias that we saved
@@ -81,5 +72,5 @@ while(endGetCollect <= len(input)):
 
 plt.plot(input, 'r')
 plt.plot(results, 'g')
-plt.ylabel(typeTrain)
+plt.ylabel(rule.trainingType)
 plt.show()

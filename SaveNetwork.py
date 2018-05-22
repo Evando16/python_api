@@ -1,31 +1,23 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from openpyxl import load_workbook
 import matplotlib.pyplot as plt
 import tensorflow as tf
+from SmoveHelper import TrainRule
+from SmoveHelper import Rules
 
-# massas
-# TREINAMENTO- RESPOSTA A CARGA
-# TREINAMENTO APOIO TERMINAL
-# TREINAMENTO APOIO MEDIO
-# COMPARAO - XLS
-
-CARGA_PATH = './network/carga/carga'
-TERMINAL_PATH = './network/terminal/terminal'
-MEDIO_PATH = './network/medio/medio'
+# Rede
+rule = Rules.loadRespostaCarga()
 
 rangeTrain = 2000000
 learningRate = 1e-4
 minError = 0.0085
-typeTrain = 'TREINAMENTO- RESPOSTA A CARGA'
 
 def isNaN(num):
     return num != num
 
 # read input data
 wb = load_workbook(filename='dados.xlsx', read_only=True)
-ws = wb[typeTrain]
-
+ws = wb[rule.trainingType]
 
 # read xlxs
 data = []
@@ -82,10 +74,6 @@ x_train = input #[1, 34.62, 78.02]
 y_train = output #[[0], [0], [1]]
 # print(input[0])
 
-#plt.plot(input[0], input[5])
-#plt.ylabel(typeTrain)
-#plt.show()
-
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
@@ -106,19 +94,10 @@ for epoch in range(rangeTrain):
         print("%0.2f" % (minError/error))
         #print (float(epoch) / rangeTrain) * 100
 
+# Prepara para salvar a rede
 saver = tf.train.Saver()
-
-if typeTrain == 'TREINAMENTO- RESPOSTA A CARGA':
-    saver.save(sess, CARGA_PATH, global_step=1000)
-    print('carga')
-elif typeTrain == 'TREINAMENTO APOIO TERMINAL':
-    saver.save(sess, TERMINAL_PATH, global_step=1000)
-    print('terminal')
-elif typeTrain == 'TREINAMENTO APOIO MEDIO':
-    saver.save(sess, MEDIO_PATH, global_step=1000)    
-    print('medio')
+saver.save(sess, rule.completePath, global_step=1000) 
         
-
 #print('Final result:\nloss = ', result[1], '\nw = ', result[2])
 
 print(sess.run(pred, {x:x_train, y:y_train}))    
