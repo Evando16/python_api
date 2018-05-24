@@ -7,6 +7,8 @@ from SmoveHelper import Rules
 
 # Rede
 rule = Rules.loadRespostaCarga()
+#rule = Rules.loadApoioTerminal()
+#rule = Rules.loadApoioMedio()
 
 # read input data
 wb = load_workbook(filename='./dados.xlsx', read_only=True)
@@ -57,7 +59,7 @@ op_to_restore = graph.get_tensor_by_name("smoke:0")
 results = []
 count = 0
 startGetCollect = 0
-endGetCollect = 20
+endGetCollect = int(rule.offset)
 
 while(endGetCollect <= len(input)):
     x_train = []
@@ -68,7 +70,7 @@ while(endGetCollect <= len(input)):
     startGetCollect += 1
     endGetCollect += 1
 
-#print(results)
+results = ([0] * int(rule.offset) + results)
 
 plt.plot(input, 'r')
 plt.plot(results, 'g')
