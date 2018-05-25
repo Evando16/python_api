@@ -73,19 +73,20 @@ for epoch in range(rule.rangeTrain):
     error = result[1]
 
     if(isNaN(error)):
-        print('return NaN\n')
-        print("error:")
-        print(lastError)
+        print('return NaN')
         break
 
     if(error < rule.minError):
         print('finish OK')
         break
 
-    if epoch % 1000 == 0:
+    if epoch % 5000 == 0:
         print(("%0.1f" % (rule.minError * 100 / error)))
 
     lastError = error
+
+print("\n\nlastError:")
+print(lastError)
 
 # Prepara para salvar a rede
 saver = tf.train.Saver()
