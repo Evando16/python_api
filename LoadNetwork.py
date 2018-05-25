@@ -6,9 +6,7 @@ from SmoveHelper import TrainRule
 from SmoveHelper import Rules
 
 # Rede
-rule = Rules.loadRespostaCarga()
-#rule = Rules.loadApoioTerminal()
-#rule = Rules.loadApoioMedio()
+rule = Rules.loadRule()
 
 # read input data
 wb = load_workbook(filename='./dados.xlsx', read_only=True)
@@ -32,29 +30,16 @@ for i in range(1, len(data)):
 
 sess=tf.Session()    
 
-#First let's load meta graph and restore weights
 saver = tf.train.import_meta_graph(rule.completePath + '-1000.meta')
 saver.restore(sess,tf.train.latest_checkpoint(rule.basePath))
-
-# Access saved Variables directly
-# This will print 2, which is the value of bias that we saved
-
-# Now, let's access and create placeholders variables and
-# create feed-dict to feed new data
 
 graph = tf.get_default_graph()
 w = graph.get_tensor_by_name("w:0")
 x = graph.get_tensor_by_name("X:0")
 y = graph.get_tensor_by_name("Y:0")
 
-#feed_dict = {w1:13.0, w2:17.0}
-
 #Now, access the op that you want to run. 
 op_to_restore = graph.get_tensor_by_name("smoke:0")
-
-# print(sess.run('W:0'))
-# op_to_restore = tf.sigmoid(tf.matmul(x, W), name='smoke')
-# print(sess.run(op_to_restore, {x:x_train}))
 
 results = []
 count = 0

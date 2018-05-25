@@ -1,9 +1,14 @@
-# MASSAS DE TREINAMENTO
+#   TENSORFLOW
+#   https://github.com/BinRoot/TensorFlow-Book
+#   http://tensorflowbook.com/
 #
-# TREINAMENTO- RESPOSTA A CARGA
-# TREINAMENTO APOIO TERMINAL
-# TREINAMENTO APOIO MEDIO
-# COMPARAO - XLS
+#
+#   MASSAS DE TREINAMENTO
+#
+#   TREINAMENTO- RESPOSTA A CARGA
+#   TREINAMENTO APOIO TERMINAL
+#   TREINAMENTO APOIO MEDIO
+#   COMPARAO - XLS
 
 TYPE_RESPOSTA_CARGA = 'TREINAMENTO- RESPOSTA A CARGA'
 TYPE_APOIO_TERMINAL = 'TREINAMENTO APOIO TERMINAL'
@@ -20,12 +25,22 @@ COMPLETE_APOIO_MEDIO_PATH = BASE_APOIO_MEDIO_PATH + '/medio'
 class Rules:
 
     @staticmethod
+    def loadRule():
+        rule = Rules.loadRespostaCarga() 
+
+        rule.rangeTrain = 2000000
+        rule.learningRate = 1e-2
+
+        return rule
+
+    @staticmethod
     def loadRespostaCarga():
         rule = TrainRule()
         rule.trainingType = TYPE_RESPOSTA_CARGA
         rule.basePath = BASE_RESPOSTA_CARGA_PATH
         rule.completePath = COMPLETE_RESPOSTA_CARGA_PATH
         rule.offset = 20
+        rule.minError = 0.000006
         return rule
 
     @staticmethod
@@ -35,6 +50,7 @@ class Rules:
         rule.basePath = BASE_APOIO_TERMINAL_PATH
         rule.completePath = COMPLETE_APOIO_TERMINAL_PATH
         rule.offset = 20
+        rule.minError = 0.00006
         return rule
 
     @staticmethod
@@ -44,6 +60,7 @@ class Rules:
         rule.basePath = BASE_APOIO_MEDIO_PATH
         rule.completePath = COMPLETE_APOIO_MEDIO_PATH
         rule.offset = 20
+        rule.minError = 0.000006
         return rule
 
 class TrainRule:
@@ -52,3 +69,6 @@ class TrainRule:
     basePath = ''
     completePath = ''
     offset = 0
+    minError = 0
+    rangeTrain = 0
+    learningRate = 0
